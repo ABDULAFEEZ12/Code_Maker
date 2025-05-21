@@ -4,18 +4,22 @@ from fastapi.responses import HTMLResponse
 import requests
 import os
 
+# Optional: Only needed for local development
+from dotenv import load_dotenv
+load_dotenv()
+
 app = FastAPI()
 
-# Allow frontend access (e.g., GitHub Pages or local dev)
+# Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace * with specific frontend URL if needed
+    allow_origins=["*"],  # You can replace "*" with your frontend domain for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Root route serving a simple frontend HTML page
+# Simple frontend HTML served on root
 @app.get("/", response_class=HTMLResponse)
 def home():
     html_content = """
@@ -64,7 +68,7 @@ def home():
     """
     return html_content
 
-# OpenRouter chat completion API
+# OpenRouter chat completion endpoint
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.post("/generate")
@@ -72,13 +76,17 @@ async def generate_code(request: Request):
     data = await request.json()
     prompt = data.get("prompt", "")
 
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if not api_key:
+        return {"error": "OPENROUTER_API_KEY is not set in environment."}
+
     headers = {
-        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",  # You can change this to another model on OpenRouter
+        "model": "openai/gpt-3.5-turbo",
         "messages": [{"role": "user", "content": prompt}],
     }
 
