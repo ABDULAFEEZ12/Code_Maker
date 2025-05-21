@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Code Maker - Tawfiq AI</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Code Maker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Welcome to Code Maker</h1>
-  <textarea id="codeArea" placeholder="Write your Tawfiq AI code here..."></textarea>
-  <button onclick="runCode()">Run Code</button>
-  <pre id="output"></pre>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-xl p-6 bg-gray-800 rounded-2xl shadow-lg">
+    <h1 class="text-3xl font-bold mb-4 text-center">🚀 Code Maker</h1>
 
-  <script src="main.js"></script>
+    <textarea id="prompt" rows="4" placeholder="Enter your prompt here..." class="w-full p-3 rounded-lg bg-gray-700 text-white mb-4 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+    <button onclick="generateCode()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition">Generate Code</button>
+
+    <div id="output" class="mt-6 p-4 bg-gray-700 rounded-lg text-sm whitespace-pre-wrap"></div>
+  </div>
+
+  <script>
+    async function generateCode() {
+      const prompt = document.getElementById('prompt').value;
+      const output = document.getElementById('output');
+      output.textContent = "⏳ Generating...";
+
+      try {
+        const res = await fetch('https://code-maker-1.onrender.com/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await res.json();
+        if (data.result) {
+          output.textContent = data.result;
+        } else {
+          output.textContent = "❌ Error: " + (data.error || "Unknown error.");
+        }
+      } catch (err) {
+        output.textContent = "❌ Network Error";
+      }
+    }
+  </script>
 </body>
 </html>
