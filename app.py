@@ -5,16 +5,21 @@ import os
 
 app = FastAPI()
 
-# Allow frontend (e.g., from GitHub Pages)
+# Allow frontend access (e.g., GitHub Pages or local dev)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can specify only your frontend URL for better security
+    allow_origins=["*"],  # Replace * with specific frontend URL if needed
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# OpenRouter endpoint
+# Root route for testing
+@app.get("/")
+def home():
+    return {"message": "Code Maker API is running 🔥"}
+
+# OpenRouter chat completion API
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.post("/generate")
@@ -28,7 +33,7 @@ async def generate_code(request: Request):
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",  # Or use another model from OpenRouter
+        "model": "openai/gpt-3.5-turbo",  # You can change this to another model on OpenRouter
         "messages": [{"role": "user", "content": prompt}],
     }
 
