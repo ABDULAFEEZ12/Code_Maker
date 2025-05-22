@@ -1,81 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TELAVISTA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Telavista | Learn AI & Code Smarter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0d1117, #1f6feb);
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      color: #58a6ff;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #c9d1d9;
+    }
+    .btn-cta {
+      background-color: #238636;
+      border: none;
+      padding: 12px 24px;
+      color: white;
+      font-weight: bold;
+      margin-top: 20px;
+      border-radius: 6px;
+    }
+    .features {
+      padding: 60px 20px;
+    }
+    .feature-box {
+      background-color: #161b22;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 0 10px #1f6feb44;
+    }
+    .feature-box i {
+      font-size: 2.5rem;
+      color: #58a6ff;
+      margin-bottom: 15px;
+    }
+    footer {
+      background-color: #161b22;
+      padding: 20px;
+      text-align: center;
+      color: #8b949e;
+      font-size: 0.9rem;
+    }
+    a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body class="light">
-    <div class="toggle-theme">
-        <label class="switch">
-            <input type="checkbox" id="themeToggle">
-            <span class="slider round"></span>
-        </label>
-        <span id="themeLabel">🌞 Light Mode</span>
+<body>
+
+  <section class="hero">
+    <h1>Telavista</h1>
+    <p>The Future of Learning AI, Coding & Digital Skills – All in One Smart Platform.</p>
+    <a href="#" class="btn-cta">Start Learning Now</a>
+  </section>
+
+  <section class="features container text-center">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-robot"></i>
+          <h3>AI Assistant</h3>
+          <p>Instant help with your coding problems and study questions using smart AI tools.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-laptop-code"></i>
+          <h3>Code Playground</h3>
+          <p>Write, test and improve code in real time across Python, JavaScript, HTML, and more.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-brain"></i>
+          <h3>Learning Paths</h3>
+          <p>Follow beginner-to-advanced paths to master programming, AI development, and data science.</p>
+        </div>
+      </div>
     </div>
 
-    <div class="container glass">
-        <h1>🌍 TELAVISTA</h1>
-        <p>Your smart assistant for learning, coding, and growing daily 🌱</p>
-
-        <select id="mode">
-            <option value="code">💻 Code Maker</option>
-            <option value="study">📚 Study AI</option>
-            <option value="general">🌐 General Knowledge</option>
-        </select>
-
-        <textarea id="prompt" placeholder="Ask me anything... ‘Create a Python app’, ‘Summarize a chapter’, etc."></textarea>
-        <button onclick="generate()">🚀 Generate</button>
-
-        <h3>✨ Result:</h3>
-        <pre id="result"></pre>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-graduation-cap"></i>
+          <h3>Courses & Challenges</h3>
+          <p>Sharpen your skills with interactive challenges and tutorials designed for fast learning.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-globe"></i>
+          <h3>Global Community</h3>
+          <p>Learn, share and build together with students and developers across the world.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-fire"></i>
+          <h3>Motivation Boost</h3>
+          <p>Daily coding streaks, reminders and motivational quotes to keep you consistent and focused.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <footer>
-        TELAVISTA © 2025 — Built for minds that grow 🧠
-    </footer>
+  <footer>
+    &copy; 2025 Telavista. Learn Smart. Build Fast. Powered by Afeez Tella.
+  </footer>
 
-    <script>
-        async function generate() {
-            const prompt = document.getElementById('prompt').value;
-            const mode = document.getElementById('mode').value;
-
-            if (!prompt) {
-                alert("Please enter your prompt.");
-                return;
-            }
-
-            const resultBox = document.getElementById('result');
-            resultBox.textContent = "⏳ Thinking...";
-
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, mode })
-                });
-                const data = await response.json();
-                resultBox.textContent = data.result || ("❌ " + data.error);
-            } catch (error) {
-                resultBox.textContent = "❌ An error occurred.";
-            }
-        }
-
-        document.getElementById('themeToggle').addEventListener('change', function () {
-            const body = document.body;
-            const label = document.getElementById('themeLabel');
-            if (this.checked) {
-                body.classList.remove('light');
-                body.classList.add('dark');
-                label.textContent = "🌙 Dark Mode";
-            } else {
-                body.classList.remove('dark');
-                body.classList.add('light');
-                label.textContent = "🌞 Light Mode";
-            }
-        });
-    </script>
 </body>
 </html>
