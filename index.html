@@ -1,67 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TELAVISTA AI</title>
+    <meta charset="UTF-8">
+    <title>TELAVISTA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <h1>TELAVISTA AI</h1>
-        <div class="toggle-button">
-            <button id="toggleAI" onclick="toggleAI()">Toggle AI</button>
-        </div>
-        <div class="ai-space" id="aiSpace">
-            <h2>AI Space</h2>
-            <select id="mode">
-                <option value="code">Code Maker</option>
-                <option value="study">Study AI</option>
-                <option value="general">General Knowledge</option>
-            </select>
-            <textarea id="prompt" placeholder="Enter your question or coding task..."></textarea>
-            <button onclick="generate()">Generate</button>
-            <h3>Result:</h3>
-            <pre id="result"></pre>
-        </div>
-        <div class="study-space" id="studySpace">
-            <h2>Study Space</h2>
-            <p>Explore and learn from a wide range of topics with our AI.</p>
-        </div>
+<body class="light">
+    <div class="toggle-theme">
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider round"></span>
+        </label>
+        <span id="themeLabel">🌞 Light Mode</span>
     </div>
+
+    <div class="container glass">
+        <h1>🌍 TELAVISTA</h1>
+        <p>Your smart assistant for learning, coding, and growing daily 🌱</p>
+
+        <select id="mode">
+            <option value="code">💻 Code Maker</option>
+            <option value="study">📚 Study AI</option>
+            <option value="general">🌐 General Knowledge</option>
+        </select>
+
+        <textarea id="prompt" placeholder="Ask me anything... ‘Create a Python app’, ‘Summarize a chapter’, etc."></textarea>
+        <button onclick="generate()">🚀 Generate</button>
+
+        <h3>✨ Result:</h3>
+        <pre id="result"></pre>
+    </div>
+
+    <footer>
+        TELAVISTA © 2025 — Built for minds that grow 🧠
+    </footer>
 
     <script>
         async function generate() {
             const prompt = document.getElementById('prompt').value;
             const mode = document.getElementById('mode').value;
+
             if (!prompt) {
-                alert("Please enter a prompt.");
+                alert("Please enter your prompt.");
                 return;
             }
 
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, mode })
-            });
+            const resultBox = document.getElementById('result');
+            resultBox.textContent = "⏳ Thinking...";
 
-            const data = await response.json();
-            if (data.result) {
-                document.getElementById('result').textContent = data.result;
-            } else {
-                document.getElementById('result').textContent = "Error: " + data.error;
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, mode })
+                });
+                const data = await response.json();
+                resultBox.textContent = data.result || ("❌ " + data.error);
+            } catch (error) {
+                resultBox.textContent = "❌ An error occurred.";
             }
         }
 
-        function toggleAI() {
-            const aiSpace = document.getElementById('aiSpace');
-            const studySpace = document.getElementById('studySpace');
-            if (aiSpace.style.display === 'none') {
-                aiSpace.style.display = 'block';
-                studySpace.style.display = 'none';
+        document.getElementById('themeToggle').addEventListener('change', function () {
+            const body = document.body;
+            const label = document.getElementById('themeLabel');
+            if (this.checked) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                label.textContent = "🌙 Dark Mode";
             } else {
-                aiSpace.style.display = 'none';
-                studySpace.style.display = 'block';
+                body.classList.remove('dark');
+                body.classList.add('light');
+                label.textContent = "🌞 Light Mode";
             }
-        }
+        });
     </script>
 </body>
 </html>
