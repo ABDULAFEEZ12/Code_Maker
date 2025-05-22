@@ -4,44 +4,44 @@ from fastapi.responses import HTMLResponse
 import requests
 import os
 
-# Load environment variables from .env
+# Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
 
-# CORS for frontend access
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to your frontend domain for security
+    allow_origins=["*"],  # Update with frontend domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Home Route - simple frontend UI
+# Home route with TELAVISTA branding
 @app.get("/", response_class=HTMLResponse)
 def home():
     html_content = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Code Maker + Edu AI</title>
+        <title>TELAVISTA</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { color: #4CAF50; }
+            body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; }
+            h1 { color: #2b7a78; }
             textarea { width: 100%; height: 150px; }
-            button { padding: 10px 20px; margin-top: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-            button:hover { background-color: #45a049; }
-            pre { background-color: #f4f4f4; padding: 10px; white-space: pre-wrap; }
+            button { padding: 10px 20px; margin-top: 10px; background-color: #2b7a78; color: white; border: none; cursor: pointer; }
+            button:hover { background-color: #205d5a; }
+            pre { background-color: #f4f4f4; padding: 10px; white-space: pre-wrap; border: 1px solid #ccc; }
         </style>
     </head>
     <body>
-        <h1>🧠 Code Maker + Edu AI</h1>
-        <p>Enter any topic or coding question below:</p>
-        <textarea id="prompt" placeholder="e.g. Explain bubble sort or Write a Python API..."></textarea><br/>
+        <h1>🌍 TELAVISTA</h1>
+        <p>Your AI-powered education & coding assistant.</p>
+        <textarea id="prompt" placeholder="e.g. Explain binary trees or Write a Python function..."></textarea><br/>
         <button onclick="generateCode()">Generate</button>
-        <h3>Result:</h3>
+        <h3>Response:</h3>
         <pre id="result"></pre>
 
         <script>
@@ -69,7 +69,7 @@ def home():
     """
     return html_content
 
-# OpenRouter chat completion endpoint
+# OpenRouter API handler
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.post("/generate")
@@ -87,7 +87,7 @@ async def generate_code(request: Request):
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",  # You can change this to gpt-4 if you're using it
+        "model": "openai/gpt-3.5-turbo",  # or gpt-4 etc.
         "messages": [{"role": "user", "content": prompt}],
     }
 
