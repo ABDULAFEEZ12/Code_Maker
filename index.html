@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TELAVISTA</title>
+    <title>TELAVISTA AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>TELAVISTA</h1>
-        <select id="mode">
-            <option value="code">Code Maker</option>
-            <option value="study">Study AI</option>
-            <option value="general">General Knowledge</option>
-        </select>
-        <textarea id="prompt" placeholder="Enter your question or coding task..."></textarea>
-        <button onclick="generate()">Generate</button>
-        <h3>Result:</h3>
-        <pre id="result"></pre>
+        <h1>TELAVISTA AI</h1>
+        <div class="toggle-button">
+            <button id="toggleAI" onclick="toggleAI()">Toggle AI</button>
+        </div>
+        <div class="ai-space" id="aiSpace">
+            <h2>AI Space</h2>
+            <select id="mode">
+                <option value="code">Code Maker</option>
+                <option value="study">Study AI</option>
+                <option value="general">General Knowledge</option>
+            </select>
+            <textarea id="prompt" placeholder="Enter your question or coding task..."></textarea>
+            <button onclick="generate()">Generate</button>
+            <h3>Result:</h3>
+            <pre id="result"></pre>
+        </div>
+        <div class="study-space" id="studySpace">
+            <h2>Study Space</h2>
+            <p>Explore and learn from a wide range of topics with our AI.</p>
+        </div>
     </div>
 
     <script>
@@ -38,6 +48,18 @@
                 document.getElementById('result').textContent = data.result;
             } else {
                 document.getElementById('result').textContent = "Error: " + data.error;
+            }
+        }
+
+        function toggleAI() {
+            const aiSpace = document.getElementById('aiSpace');
+            const studySpace = document.getElementById('studySpace');
+            if (aiSpace.style.display === 'none') {
+                aiSpace.style.display = 'block';
+                studySpace.style.display = 'none';
+            } else {
+                aiSpace.style.display = 'none';
+                studySpace.style.display = 'block';
             }
         }
     </script>
