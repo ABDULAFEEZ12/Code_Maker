@@ -1,65 +1,47 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 30px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 h1 {
-  color: #4CAF50;
-  margin-bottom: 20px;
-  text-align: center;
+    color: #4CAF50;
 }
 
 textarea {
-  width: 100%;
-  height: 200px;
-  font-family: monospace;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+}
+
+select, button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
 }
 
 button {
-  display: block;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  font-size: 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 button:hover {
-  background-color: #45a049;
+    background-color: #45a049;
 }
 
-h3 {
-  margin-top: 30px;
-  color: #333;
-}
-
-pre#result {
-  background-color: #2d2d2d;
-  color: #0f0;
-  padding: 15px;
-  border-radius: 6px;
-  white-space: pre-wrap;
-  overflow-x: auto;
-  min-height: 100px;
-  font-family: monospace;
+pre {
+    background-color: #eaeaea;
+    padding: 15px;
+    white-space: pre-wrap;
+    border-radius: 5px;
 }
