@@ -1,19 +1,13 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-import requests
-import os
-
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Update with frontend domain in production
+    allow_origins=["*"],  # Adjust in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -76,25 +70,26 @@ def home():
                 padding-bottom: 10px;
             }
             .feature {
+                background-color: #ffffff;
                 margin-top: 30px;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .feature h3 {
+                margin-top: 0;
                 margin-bottom: 10px;
                 color: #205d5a;
             }
-            /* Optional: add some styling for buttons inside features */
-            .feature button {
-                padding: 10px 20px;
-                background-color: #2b7a78;
-                color: white;
-                border: none;
+            input[type="text"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 10px;
+                border: 1px solid #ccc;
                 border-radius: 4px;
-                cursor: pointer;
+                font-size: 1em;
             }
-            .feature button:hover {
-                background-color: #205d5a;
-            }
-            /* Responsive adjustments */
+            /* Responsive improvements */
             @media(max-width: 600px){
                 header h1 {
                     font-size: 2em;
@@ -113,29 +108,41 @@ def home():
             <a href="#start" class="cta-button">Start Learning Now</a>
         </header>
         <section id="features">
+            <!-- AI Assistant -->
             <div class="feature" id="ai-assistant">
                 <h3>AI Assistant</h3>
                 <p>Instant help with your coding problems and study questions using smart AI tools.</p>
+                <input type="text" placeholder="Search AI help topics..." />
             </div>
+            <!-- Code Playground -->
             <div class="feature" id="code-playground">
                 <h3>Code Playground</h3>
                 <p>Write, test and improve code in real time across Python, JavaScript, HTML, and more.</p>
+                <input type="text" placeholder="Search code examples or languages..." />
             </div>
+            <!-- Learning Paths -->
             <div class="feature" id="learning-paths">
                 <h3>Learning Paths</h3>
                 <p>Follow beginner-to-advanced paths to master programming, AI development, and data science.</p>
+                <input type="text" placeholder="Search learning paths..." />
             </div>
+            <!-- Courses & Challenges -->
             <div class="feature" id="courses-challenges">
                 <h3>Courses & Challenges</h3>
                 <p>Sharpen your skills with interactive challenges and tutorials designed for fast learning.</p>
+                <input type="text" placeholder="Search courses or challenges..." />
             </div>
+            <!-- Global Community -->
             <div class="feature" id="global-community">
                 <h3>Global Community</h3>
                 <p>Learn, share and build together with students and developers across the world.</p>
+                <input type="text" placeholder="Search community topics..." />
             </div>
+            <!-- Motivation Boost -->
             <div class="feature" id="motivation-boost">
                 <h3>Motivation Boost</h3>
                 <p>Daily coding streaks, reminders and motivational quotes to keep you consistent and focused.</p>
+                <input type="text" placeholder="Search motivational content..." />
             </div>
         </section>
     </body>
