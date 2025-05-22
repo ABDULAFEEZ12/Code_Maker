@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Assistant</title>
+<link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+<h2>AI Assistant</h2>
+<p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
+
+<!-- Example AI interaction -->
+<textarea id="question" rows="4" cols="50" placeholder="Ask your question..."></textarea><br/>
+<button onclick="askAI()">Ask AI</button>
+
+<div id="ai-response" style="margin-top:20px; border:1px solid #ccc; padding:10px; min-height:100px;">
+  <em>Your AI response will appear here.</em>
+</div>
+
+<script>
+function askAI() {
+  const question = document.getElementById('question').value;
+  const responseDiv = document.getElementById('ai-response');
+  // Placeholder for AI integration
+  responseDiv.innerHTML = "Thinking...";
+
+  // Simulate AI response
+  setTimeout(() => {
+    responseDiv.innerHTML = `You asked: "${question}".\nThis is a placeholder response. Integrate your AI backend here.`;
+  }, 1000);
+}
+</script>
+</body>
+</html>
