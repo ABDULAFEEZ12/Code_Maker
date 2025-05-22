@@ -1,134 +1,162 @@
-html_content = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>TELAVISTA</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #e0f2f1, #f1f8e9);
-            color: #333;
-        }
+:root {
+    --primary: #2e7d32;
+    --bg-light: #f4f4f4;
+    --text-light: #333;
+    --bg-dark: #121212;
+    --text-dark: #f1f1f1;
+    --glass-bg-light: rgba(255, 255, 255, 0.6);
+    --glass-bg-dark: rgba(30, 30, 30, 0.5);
+    --border-radius: 20px;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 60px auto;
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-            transition: transform 0.3s ease;
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+}
 
-        .container:hover {
-            transform: scale(1.01);
-        }
+body.light {
+    background: var(--bg-light);
+    color: var(--text-light);
+}
 
-        h1 {
-            color: #1b5e20;
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
 
-        p {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 20px;
-        }
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, color 0.3s;
+}
 
-        textarea {
-            width: 100%;
-            height: 140px;
-            padding: 14px;
-            border: 1px solid #cfd8dc;
-            border-radius: 12px;
-            font-size: 16px;
-            resize: vertical;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
-        }
+.glass {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(10px);
+}
 
-        button {
-            padding: 14px 28px;
-            margin-top: 20px;
-            background-color: #43a047;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+body.dark .glass {
+    background: var(--glass-bg-dark);
+}
 
-        button:hover {
-            background-color: #388e3c;
-            transform: scale(1.02);
-        }
+h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
 
-        h3 {
-            margin-top: 30px;
-            color: #2e7d32;
-        }
+p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
 
-        pre {
-            background-color: #f9fbe7;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #c5e1a5;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-size: 15px;
-        }
+select, textarea, button {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    transition: background 0.3s, color 0.3s;
+}
 
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-bottom: 20px;
-            color: #777;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🌍 TELAVISTA</h1>
-        <p>Your AI-powered assistant for learning, coding, and growing every day.</p>
-        <textarea id="prompt" placeholder="Write something like 'Explain recursion' or 'Create a Python game'..."></textarea><br/>
-        <button onclick="generateCode()">🚀 Generate</button>
+textarea {
+    resize: vertical;
+    height: 120px;
+}
 
-        <h3>Result:</h3>
-        <pre id="result">✨ Waiting for your input...</pre>
-    </div>
+button {
+    background-color: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+}
 
-    <footer>
-        TELAVISTA © 2025 — Built for minds that grow 🌱
-    </footer>
+button:hover {
+    background-color: #27642a;
+}
 
-    <script>
-        async function generateCode() {
-            const prompt = document.getElementById('prompt').value;
-            if (!prompt) {
-                alert("Please enter a prompt.");
-                return;
-            }
+pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
 
-            const resultBox = document.getElementById('result');
-            resultBox.textContent = "⏳ Generating... Please wait.";
+footer {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 14px;
+    color: #888;
+}
 
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt })
-                });
+/* Toggle Switch */
+.toggle-theme {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px;
+    font-size: 14px;
+    gap: 10px;
+}
 
-                const data = await response.json();
-                resultBox.textContent = data.result || ("❌ Error: " + data.error);
-            } catch (error) {
-                resultBox.textContent = "❌ Unexpected error occurred.";
-            }
-        }
-    </script>
-</body>
-</html>
-"""
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
