@@ -1,97 +1,65 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import requests
 import os
-
-# Optional: Only needed for local development
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = FastAPI()
 
-# Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can replace "*" with your frontend domain for security
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Simple frontend HTML served on root
-@app.get("/", response_class=HTMLResponse)
-def home():
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Code Maker Frontend</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { color: #4CAF50; }
-            textarea { width: 100%; height: 150px; }
-            button { padding: 10px 20px; margin-top: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-            button:hover { background-color: #45a049; }
-            pre { background-color: #f4f4f4; padding: 10px; white-space: pre-wrap; }
-        </style>
-    </head>
-    <body>
-        <h1>Welcome to Code Maker Frontend!</h1>
-        <textarea id="prompt" placeholder="Enter your prompt here..."></textarea><br/>
-        <button onclick="generateCode()">Generate Code</button>
-        <h3>Result:</h3>
-        <pre id="result"></pre>
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
-        <script>
-            async function generateCode() {
-                const prompt = document.getElementById('prompt').value;
-                if (!prompt) {
-                    alert("Please enter a prompt.");
-                    return;
-                }
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt })
-                });
-                const data = await response.json();
-                if (data.result) {
-                    document.getElementById('result').textContent = data.result;
-                } else if (data.error) {
-                    document.getElementById('result').textContent = "Error: " + data.error;
-                }
-            }
-        </script>
-    </body>
-    </html>
-    """
-    return html_content
-
-# OpenRouter chat completion endpoint
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+@app.get("/", response_class=HTMLResponse)
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/generate")
 async def generate_code(request: Request):
     data = await request.json()
     prompt = data.get("prompt", "")
+    mode = data.get("mode", "code")  # default to code
 
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
-        return {"error": "OPENROUTER_API_KEY is not set in environment."}
+        return {"error": "OPENROUTER_API_KEY not set in .env file."}
+
+    # Build system prompt based on mode
+    if mode == "code":
+        system_prompt = "You are a professional coding assistant. Answer clearly and return only code unless asked to explain."
+    elif mode == "study":
+        system_prompt = "You are a helpful educational AI tutor. Teach clearly and provide examples."
+    else:  # general
+        system_prompt = "You are a helpful and smart AI assistant who gives clear answers to any question."
+
+    payload = {
+        "model": "openai/gpt-3.5-turbo",
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+    }
 
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
 
-    payload = {
-        "model": "openai/gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": prompt}],
-    }
-
     response = requests.post(OPENROUTER_API_URL, headers=headers, json=payload)
-
     if response.status_code == 200:
         completion = response.json()["choices"][0]["message"]["content"]
         return {"result": completion}
