@@ -1,0 +1,50 @@
+/* Basic common styles for all pages */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #fff;
+  color: #333;
+  line-height: 1.5;
+}
+h2 {
+  color: #2b7a78;
+}
+textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 1em;
+  padding: 10px;
+  box-sizing: border-box;
+}
+button {
+  background-color: #3aa4b4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #298a91;
+}
+select {
+  margin-bottom: 10px;
+  padding: 8px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+ul li {
+  background-color: #f0f4f8;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+a {
+  color: #2b7a78;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
