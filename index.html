@@ -1,46 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code Maker</title>
-  <link rel="stylesheet" href="style.css" />
+    <title>Code Maker + Study AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="container">
+        <h1>Code Maker + Study AI</h1>
+        <select id="mode">
+            <option value="code">Code Maker</option>
+            <option value="study">Study AI</option>
+            <option value="general">General Knowledge</option>
+        </select>
+        <textarea id="prompt" placeholder="Enter your question or coding task..."></textarea>
+        <button onclick="generate()">Generate</button>
+        <h3>Result:</h3>
+        <pre id="result"></pre>
+    </div>
 
-  <div class="container">
-    <h1>💻 Code Maker</h1>
-    <textarea id="prompt" placeholder="Enter your prompt here..."></textarea><br />
-    <button onclick="generateCode()">🚀 Generate Code</button>
+    <script>
+        async function generate() {
+            const prompt = document.getElementById('prompt').value;
+            const mode = document.getElementById('mode').value;
+            if (!prompt) {
+                alert("Please enter a prompt.");
+                return;
+            }
 
-    <h3>Result:</h3>
-    <pre id="result">Your output will appear here...</pre>
-  </div>
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt, mode })
+            });
 
-  <script>
-    async function generateCode() {
-      const prompt = document.getElementById("prompt").value;
-      if (!prompt) {
-        alert("Please enter a prompt.");
-        return;
-      }
-
-      const response = await fetch("/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt })
-      });
-
-      const data = await response.json();
-      const resultBox = document.getElementById("result");
-
-      if (data.result) {
-        resultBox.textContent = data.result;
-      } else {
-        resultBox.textContent = "❌ Error: " + (data.error || "Unknown error");
-      }
-    }
-  </script>
-
+            const data = await response.json();
+            if (data.result) {
+                document.getElementById('result').textContent = data.result;
+            } else {
+                document.getElementById('result').textContent = "Error: " + data.error;
+            }
+        }
+    </script>
 </body>
 </html>
