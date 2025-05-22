@@ -1,47 +1,134 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
+html_content = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TELAVISTA</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #e0f2f1, #f1f8e9);
+            color: #333;
+        }
 
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-}
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease;
+        }
 
-h1 {
-    color: #4CAF50;
-}
+        .container:hover {
+            transform: scale(1.01);
+        }
 
-textarea {
-    width: 100%;
-    height: 150px;
-    margin-top: 10px;
-}
+        h1 {
+            color: #1b5e20;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
 
-select, button {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 16px;
-}
+        p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 14px;
+            border: 1px solid #cfd8dc;
+            border-radius: 12px;
+            font-size: 16px;
+            resize: vertical;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button {
+            padding: 14px 28px;
+            margin-top: 20px;
+            background-color: #43a047;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-pre {
-    background-color: #eaeaea;
-    padding: 15px;
-    white-space: pre-wrap;
-    border-radius: 5px;
-}
+        button:hover {
+            background-color: #388e3c;
+            transform: scale(1.02);
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #2e7d32;
+        }
+
+        pre {
+            background-color: #f9fbe7;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #c5e1a5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-bottom: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 TELAVISTA</h1>
+        <p>Your AI-powered assistant for learning, coding, and growing every day.</p>
+        <textarea id="prompt" placeholder="Write something like 'Explain recursion' or 'Create a Python game'..."></textarea><br/>
+        <button onclick="generateCode()">🚀 Generate</button>
+
+        <h3>Result:</h3>
+        <pre id="result">✨ Waiting for your input...</pre>
+    </div>
+
+    <footer>
+        TELAVISTA © 2025 — Built for minds that grow 🌱
+    </footer>
+
+    <script>
+        async function generateCode() {
+            const prompt = document.getElementById('prompt').value;
+            if (!prompt) {
+                alert("Please enter a prompt.");
+                return;
+            }
+
+            const resultBox = document.getElementById('result');
+            resultBox.textContent = "⏳ Generating... Please wait.";
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const data = await response.json();
+                resultBox.textContent = data.result || ("❌ Error: " + data.error);
+            } catch (error) {
+                resultBox.textContent = "❌ Unexpected error occurred.";
+            }
+        }
+    </script>
+</body>
+</html>
+"""
