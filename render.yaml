@@ -1,9 +1,7 @@
 services:
   - type: web
-    name: code-maker-backend
+    name: telavista
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app:app --host 0.0.0.0 --port 10000
-    envVars:
-      - key: OPENROUTER_API_KEY
-        value: YOUR_KEY_HERE  # or set this in Render Dashboard
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn main:app"
+    plan: free
