@@ -1,24 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Global Community</title>
-<link rel="stylesheet" href="/static/styles.css" />
+  <title>Success Road Map - Telavista</title>
 </head>
 <body>
-<h2>Goals Maproad</h2>
-<p>Learn, share, and build with students and developers worldwide.</p>
-
-<!-- Basic forum or discussion placeholder -->
-<ul>
-  <li><a href="#">Discussion on Python Tips</a></li>
-  <li><a href="#">Help with JavaScript Bugs</a></li>
-  <li><a href="#">Share Your Projects</a></li>
-  <!-- Expand as needed -->
-</ul>
-
-<!-- You could add a search or chat feature here later -->
-
+  <h1>Success Road Map</h1>
+  <p>Follow your personal roadmap to success with step-by-step goals and achievements.</p>
 </body>
 </html>
