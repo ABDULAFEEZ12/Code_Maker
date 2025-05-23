@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI Assistant</title>
-<link rel="stylesheet" href="/static/styles.css" />
+  <meta charset="UTF-8">
+  <title>AI Assistant | Telavista</title>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-<h2>AI Assistant</h2>
-<p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
+  <header>
+    <h1>Telavista</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/ai-videos-maker">AI Videos Maker</a>
+      <a href="/success-road-map">Success Road Map</a>
+      <a href="/ai">AI Assistant</a>
+    </nav>
+  </header>
 
-<!-- Example AI interaction -->
-<textarea id="question" rows="4" cols="50" placeholder="Ask your question..."></textarea><br/>
-<button onclick="askAI()">Ask AI</button>
+  <main>
+    <h2>AI Assistant</h2>
+    <p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
 
-<div id="ai-response" style="margin-top:20px; border:1px solid #ccc; padding:10px; min-height:100px;">
-  <em>Your AI response will appear here.</em>
-</div>
+    <!-- 🔍 Search bar -->
+    <div style="margin-top: 20px;">
+      <input type="text" placeholder="Type your question..." id="searchInput" style="width: 300px; padding: 8px;">
+      <button onclick="searchQuestion()" style="padding: 8px 12px;">Ask AI</button>
+    </div>
+  </main>
 
-<script>
-function askAI() {
-  const question = document.getElementById('question').value;
-  const responseDiv = document.getElementById('ai-response');
-  // Placeholder for AI integration
-  responseDiv.innerHTML = "Thinking...";
-
-  // Simulate AI response
-  setTimeout(() => {
-    responseDiv.innerHTML = `You asked: "${question}".\nThis is a placeholder response. Integrate your AI backend here.`;
-  }, 1000);
-}
-</script>
+  <script>
+    function searchQuestion() {
+      const query = document.getElementById('searchInput').value;
+      alert("AI will process: " + query); // Replace this with actual AI call in future
+    }
+  </script>
 </body>
 </html>
