@@ -1,37 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>AI Assistant | Telavista</title>
-  <link rel="stylesheet" href="/static/styles.css">
+  <title>AI Assistant - Telavista</title>
 </head>
 <body>
-  <header>
-    <h1>Telavista</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/ai-videos-maker">AI Videos Maker</a>
-      <a href="/success-road-map">Success Road Map</a>
-      <a href="/ai">AI Assistant</a>
-    </nav>
-  </header>
-
-  <main>
-    <h2>AI Assistant</h2>
-    <p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
-
-    <!-- 🔍 Search bar -->
-    <div style="margin-top: 20px;">
-      <input type="text" placeholder="Type your question..." id="searchInput" style="width: 300px; padding: 8px;">
-      <button onclick="searchQuestion()" style="padding: 8px 12px;">Ask AI</button>
-    </div>
-  </main>
+  <h1>AI Assistant</h1>
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Ask a coding or study question" />
+    <button type="submit">Search</button>
+  </form>
+  <div id="ai-response">Your AI results will show here...</div>
 
   <script>
-    function searchQuestion() {
-      const query = document.getElementById('searchInput').value;
-      alert("AI will process: " + query); // Replace this with actual AI call in future
-    }
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("searchInput");
+    const responseDiv = document.getElementById("ai-response");
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const query = input.value;
+      responseDiv.innerText = "Thinking...";
+      const res = await fetch(`https://api.tawfiq-ai.com/ask?q=${encodeURIComponent(query)}`);
+      const data = await res.text();
+      responseDiv.innerText = data || "No response found.";
+    };
   </script>
 </body>
 </html>
