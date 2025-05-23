@@ -2,10 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,25 +14,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-def load_html(filename: str) -> str:
-    filepath = os.path.join("templates", filename)
-    with open(filepath, "r", encoding="utf-8") as file:
-        return file.read()
-
+# Routes
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return HTMLResponse(content=load_html("index.html"))
+    with open("static/index.html", "r") as file:
+        return HTMLResponse(content=file.read(), status_code=200)
 
 @app.get("/ai", response_class=HTMLResponse)
 async def ai_assistant(request: Request):
-    return HTMLResponse(content=load_html("ai.html"))
+    with open("static/ai.html", "r") as file:
+        return HTMLResponse(content=file.read(), status_code=200)
 
-@app.get("/ai-videos-maker", response_class=HTMLResponse)
-async def ai_videos_maker(request: Request):
-    return HTMLResponse(content=load_html("ai_videos_maker.html"))
+@app.get("/ai-videos", response_class=HTMLResponse)
+async def ai_videos(request: Request):
+    with open("static/ai_videos.html", "r") as file:
+        return HTMLResponse(content=file.read(), status_code=200)
 
-@app.get("/success-road-map", response_class=HTMLResponse)
-async def success_road_map(request: Request):
-    return HTMLResponse(content=load_html("success_road_map.html"))
+@app.get("/success-roadmap", response_class=HTMLResponse)
+async def success_roadmap(request: Request):
+    with open("static/success_roadmap.html", "r") as file:
+        return HTMLResponse(content=file.read(), status_code=200)
