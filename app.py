@@ -1,16 +1,18 @@
 import os
-import openai
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+import openai
 
+# Initialize FastAPI app
 app = FastAPI()
 
 # Load API key from environment variable
-OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")  # or OPENAI_API_KEY
 if not OPENAI_API_KEY:
     raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
 
+# Configure DeepAI API key
 openai.api_key = OPENAI_API_KEY
 
 # Enable CORS for all origins (adjust as needed)
@@ -22,6 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Serve the frontend
 @app.get("/", response_class=HTMLResponse)
 def home():
     html_content = """
@@ -275,6 +278,7 @@ def home():
     """
     return HTMLResponse(content=html_content)
 
+# API route to handle questions
 @app.post("/ask")
 async def ask(request: Request):
     data = await request.json()
@@ -282,16 +286,18 @@ async def ask(request: Request):
     section = data.get("section", "")
 
     try:
+        # Prepare the prompt based on section
         prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # or "text-curie-001" etc.
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=150,
-            temperature=0.7,
-            n=1,
-            stop=["\n"]
+            temperature=0.7
         )
-        answer = response.choices[0].text.strip()
+        answer = response.choices[0].message['content'].strip()
     except Exception as e:
         print(f"Error during API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
