@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Load API key from environment variable
+# Load DeepAI API key from environment
 OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
@@ -191,13 +191,13 @@ def home():
   <div id="goalsMessages"></div>
 </div>
 
-<!-- Scripts -->
+<!-- JavaScript for tab switching and asking -->
 <script>
   function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.style.display='none');
     document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
     document.getElementById(sectionId).style.display='block';
-    document.querySelector(\`button[onclick="showSection('${sectionId}')"]\`).classList.add('active');
+    document.querySelector(`button[onclick="showSection('${sectionId}')"]`).classList.add('active');
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -282,19 +282,19 @@ async def ask(request: Request):
     section = data.get("section", "")
 
     try:
-        # Compose prompt with system message and user question
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Using GPT-4
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"Section: {section}\nQuestion: {question}\nAnswer:"}
-            ],
+        prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
             max_tokens=150,
             temperature=0.7,
+            n=1,
+            stop=["\n"]
         )
-        answer = response.choices[0].message['content'].strip()
+        answer = response.choices[0].text.strip()
     except Exception as e:
-        print(f"Error during GPT-4 API call: {e}")
+        # Log the exception for debugging
+        print(f"Error during DeepAI API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
 
     return JSONResponse({"answer": answer})
