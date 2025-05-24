@@ -112,23 +112,23 @@ def home():
         </div>
 
         <div id="AI" class="tabcontent">
-            <h3>AI Assistant</h3>
+            <h3>AI</h3>
             <p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
         </div>
 
-        <div id="CodePlayground" class="tabcontent">
-            <h3>Code Playground</h3>
-            <p>Write, test, and improve your code in real-time.</p>
+        <div id="Personal_Assistant" class="tabcontent">
+            <h3>Personal Assistant</h3>
+            <p>Write, test, and improve TELLA ABDUL AFEEZ ADEWALE in real-time.</p>
         </div>
 
-        <div id="StudyRoom" class="tabcontent">
-            <h3>Study Room</h3>
+        <div id="5.0GPA" class="tabcontent">
+            <h3>%>5.0 G.P.A</h3>
             <p>Follow your learning paths to master programming, AI, and data science.</p>
         </div>
 
-        <div id="GlobalCommunity" class="tabcontent">
-            <h3>Global Community</h3>
-            <p>Learn, share, and build with students and developers worldwide.</p>
+        <div id="GoalsRoadMap" class="tabcontent">
+            <h3>Goals Road-Map</h3>
+            <p>How Tella Abdul Afeez Adewale will rule the WORLD.</p>
         </div>
 
         <script>
