@@ -165,7 +165,7 @@ def home():
 </div>
 
 <div class="section" id="GPA">
-  <h3>%&gt;5.0 G.P.A</h3>
+  <h3>%>5.0 G.P.A</h3>
   <p>Ask about courses, studying tips, or anything related to GPA.</p>
   <input type="text" id="gpaUserInput" placeholder="Ask about GPA or courses..." />
   <select id="coursesDropdown">
@@ -261,7 +261,7 @@ def home():
       messagesDiv.appendChild(aiMsg);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     } catch (err) {
-      console.error(err);
+      console.error("Error during API request:", err);
       messagesDiv.removeChild(loadingMsg);
       const errorMsg = document.createElement("div");
       errorMsg.textContent = "Error getting response.";
@@ -281,7 +281,6 @@ async def ask(request: Request):
     question = data.get("question", "")
     section = data.get("section", "")
 
-    # Generate response from DeepAI
     try:
         prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
         response = openai.Completion.create(
@@ -294,6 +293,8 @@ async def ask(request: Request):
         )
         answer = response.choices[0].text.strip()
     except Exception as e:
+        # Log the exception for debugging
+        print(f"Error during DeepAI API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
 
     return JSONResponse({"answer": answer})
