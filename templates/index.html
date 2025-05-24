@@ -46,23 +46,37 @@
   <button class="tablinks" onclick="openTab(event, 'GlobalCommunity')">Global Community</button>
 </div>
 
+<!-- AI Section -->
 <div id="AI" class="tabcontent">
-  <!-- Inline content for AI -->
+  <!-- Existing content or placeholder -->
   <h3>AI Assistant</h3>
   <p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
-  <!-- Or load your AI page content here -->
+
+  <!-- New "Ask a question My Boss..." feature -->
+  <div style="margin-top:20px;">
+    <label for="bossQuestion">Ask a question My Boss...</label><br/>
+    <input type="text" id="bossQuestionInput" placeholder="Type your question here..." style="width:70%; padding:8px; margin-top:8px;"/>
+    <button onclick="askMyBoss()" style="padding:8px 16px; margin-left:10px;">Ask</button>
+  </div>
+
+  <!-- Response display -->
+  <div id="bossResponse" style="margin-top:15px; padding:10px; border:1px solid #ccc; border-radius:5px; min-height:50px;">
+  </div>
 </div>
 
+<!-- Code Playground Section -->
 <div id="CodePlayground" class="tabcontent">
   <h3>Code Playground</h3>
   <p>Write, test, and improve your code in real-time.</p>
 </div>
 
+<!-- Study Room Section -->
 <div id="StudyRoom" class="tabcontent">
   <h3>Study Room</h3>
   <p>Follow your learning paths to master programming, AI, and data science.</p>
 </div>
 
+<!-- Global Community Section -->
 <div id="GlobalCommunity" class="tabcontent">
   <h3>Global Community</h3>
   <p>Learn, share, and build with students and developers worldwide.</p>
@@ -89,6 +103,30 @@ function openTab(evt, tabName) {
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector('.tablinks').click();
 });
+
+// Function to handle "Ask My Boss..."
+function askMyBoss() {
+  const questionInput = document.getElementById('bossQuestionInput');
+  const responseDiv = document.getElementById('bossResponse');
+  const question = questionInput.value.trim();
+  
+  if (!question) {
+    responseDiv.innerHTML = "<em>Please enter a question.</em>";
+    return;
+  }
+  
+  // Show the question
+  responseDiv.innerHTML = "<strong>Question:</strong> " + question + "<br/>";
+
+  // Simulate an API response or replace with real API call
+  responseDiv.innerHTML += "<em>Thinking...</em>";
+
+  // Simulate async response
+  setTimeout(() => {
+    const reply = "This is a simulated answer from My Boss. (Replace with real API call)";
+    responseDiv.innerHTML = "<strong>Question:</strong> " + question + "<br/><strong>My Boss says:</strong> " + reply;
+  }, 1500);
+}
 </script>
 
 </body>
