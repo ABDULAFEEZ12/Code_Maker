@@ -1,10 +1,19 @@
+import os
+import openai
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Enable CORS for all origins (adjust in production)
+# Load DeepAI API key from environment
+OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")
+if not OPENAI_API_KEY:
+    raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
+
+openai.api_key = OPENAI_API_KEY
+
+# Enable CORS for all origins (adjust as needed)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -169,7 +178,6 @@ def home():
     <option value="MATH106">Mathematics 106 - Differential Equations</option>
     <option value="MATH107">Mathematics 107 - Mathematical Logic</option>
     <option value="MATH108">Mathematics 108 - Numerical Methods</option>
-    <!-- Add more courses as needed -->
   </select>
   <button onclick="sendAsk('GPA')">Ask</button>
   <div id="gpaMessages"></div>
@@ -196,7 +204,6 @@ def home():
     document.querySelector('.tab button').click();
   });
 
-  // Function to send ask to backend
   async function sendAsk(section) {
     let inputId, messageId, question;
     if (section === 'AI') {
@@ -221,12 +228,12 @@ def home():
     document.getElementById(inputId).value = "";
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-    // Special handling for GPA section to include selected course
+    // For GPA section, include selected course if any
     let payloadQuestion = question;
     if (section === 'GPA') {
       const course = document.getElementById('coursesDropdown').value;
       if (course) {
-        payloadQuestion = question + " (Course: " + course + ")";
+        payloadQuestion += ` (Course: ${course})`;
       }
     }
 
@@ -247,7 +254,7 @@ def home():
       // Remove loader
       messagesDiv.removeChild(loadingMsg);
       const answer = data.answer || "Sorry, couldn't answer.";
-      // Show assistant reply
+      // Show response
       const aiMsg = document.createElement("div");
       aiMsg.className = "ai-message";
       aiMsg.innerHTML = "Telavista: " + answer;
@@ -268,13 +275,25 @@ def home():
     """
     return HTMLResponse(content=html_content)
 
-# --- Endpoint for processing questions ---
 @app.post("/ask")
 async def ask(request: Request):
     data = await request.json()
     question = data.get("question", "")
     section = data.get("section", "")
-    # You can customize responses based on section or question
-    # For now, a generic mock response
-    answer = f"Telavista received your question in section '{section}': '{question}'. This is a placeholder response."
+
+    # Generate response from DeepAI
+    try:
+        prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=150,
+            temperature=0.7,
+            n=1,
+            stop=["\n"]
+        )
+        answer = response.choices[0].text.strip()
+    except Exception as e:
+        answer = "Sorry, I couldn't generate a response at the moment."
+
     return JSONResponse({"answer": answer})
