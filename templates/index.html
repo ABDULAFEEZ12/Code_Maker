@@ -1,129 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TELAVISTA – The Future of Learning AI, Coding & Digital Skills</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Telavista - Home</title>
+<link rel="stylesheet" href="/static/styles.css" />
+<style>
+  /* Basic styles for tabs */
+  body { font-family: Arial, sans-serif; margin: 0; }
+  .tab {
+    overflow: hidden;
+    background-color: #333;
+  }
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  .tab button.active {
+    background-color: #2b7a78;
+    color: white;
+  }
+  /* Content sections */
+  .tabcontent {
+    display: none;
+    padding: 20px;
+  }
+</style>
 </head>
+<body>
 
-<body class="light-mode">
-  <button class="toggle-btn" onclick="toggleMode()">Toggle Mode</button>
+<h2>Telavista</h2>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'AI')">AI</button>
+  <button class="tablinks" onclick="openTab(event, 'CodePlayground')">Code Playground</button>
+  <button class="tablinks" onclick="openTab(event, 'StudyRoom')">Study Room</button>
+  <button class="tablinks" onclick="openTab(event, 'GlobalCommunity')">Global Community</button>
+</div>
 
-  <header>
-    <h1>🌙 TELAVISTA – The Future of Learning AI, Coding & Digital Skills 🌙</h1>
-    <h3>✨ Ask me anything, My Boss ✨</h3>
-  </header>
+<div id="AI" class="tabcontent">
+  <!-- Inline content for AI -->
+  <h3>AI Assistant</h3>
+  <p>Get instant help with your coding problems and study questions using our smart AI tools.</p>
+  <!-- Or load your AI page content here -->
+</div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('aiSection', event)">🤖 AI</div>
-    <div class="tab" onclick="switchTab('codePlaygroundSection', event)">💻 Code Playground</div>
-    <div class="tab" onclick="switchTab('studyRoomSection', event)">📚 Study Room</div>
-    <div class="tab" onclick="switchTab('communitySection', event)">🌐 Global Community</div>
-  </div>
+<div id="CodePlayground" class="tabcontent">
+  <h3>Code Playground</h3>
+  <p>Write, test, and improve your code in real-time.</p>
+</div>
 
-  <!-- AI Section -->
-  <div class="section active" id="aiSection">
-    <select id="subjectSelector">
-      <option value="Islam">Islam</option>
-      <option value="Math">Math</option>
-      <option value="Coding">Coding</option>
-      <option value="General">General</option>
-    </select>
-    <input type="text" id="userInput" placeholder="Ask a question..." />
-    <button id="askButton" onclick="sendQuestion()">Ask</button>
-    <div class="messages" id="messages"></div>
-  </div>
+<div id="StudyRoom" class="tabcontent">
+  <h3>Study Room</h3>
+  <p>Follow your learning paths to master programming, AI, and data science.</p>
+</div>
 
-  <!-- Code Playground Section -->
-  <div class="section" id="codePlaygroundSection">
-    <h2>Code Playground</h2>
-    <p>Coming soon: an interactive coding environment.</p>
-  </div>
+<div id="GlobalCommunity" class="tabcontent">
+  <h3>Global Community</h3>
+  <p>Learn, share, and build with students and developers worldwide.</p>
+</div>
 
-  <!-- Study Room Section -->
-  <div class="section" id="studyRoomSection">
-    <h2>Study Room</h2>
-    <label for="mathCourses">Mathematics 100-Level (Second Semester):</label>
-    <select id="mathCourses">
-      <option value="MTH112">MTH112 – Calculus II</option>
-      <option value="MTH114">MTH114 – Linear Algebra</option>
-      <option value="STA112">STA112 – Probability & Statistics</option>
-      <option value="CSC112">CSC112 – Introduction to Programming</option>
-      <option value="PHY102">PHY102 – Physics for Scientists II</option>
-    </select>
-  </div>
+<script>
+function openTab(evt, tabName) {
+  // Hide all tab content
+  var tabcontent = document.getElementsByClassName("tabcontent");
+  for (var i=0; i<tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  // Remove active class from all buttons
+  var tablinks = document.getElementsByClassName("tablinks");
+  for (var i=0; i<tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  // Show the selected tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
 
-  <!-- Global Community Section -->
-  <div class="section" id="communitySection">
-    <h2>Global Community</h2>
-    <p>Connect with the global community here.</p>
-  </div>
+// Open the first tab by default
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector('.tablinks').click();
+});
+</script>
 
-  <script>
-    let chatHistory = [];
-
-    function switchTab(sectionId, event) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(sectionId).classList.add('active');
-      event.target.classList.add('active');
-      document.getElementById('messages').innerHTML = '';
-    }
-
-    function toggleMode() {
-      document.body.classList.toggle('light-mode');
-      document.body.classList.toggle('dark-mode');
-      const toggleBtn = document.querySelector('.toggle-btn');
-      toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Toggle Light Mode' : 'Toggle Dark Mode';
-    }
-
-    async function sendQuestion() {
-      const inputEl = document.getElementById("userInput");
-      const subject = document.getElementById("subjectSelector").value;
-      const question = inputEl.value.trim();
-      if (!question) return;
-
-      const messagesDiv = document.getElementById("messages");
-      const userMsg = document.createElement("p");
-      userMsg.className = "user-message";
-      userMsg.textContent = `You (${subject}): ${question}`;
-      messagesDiv.appendChild(userMsg);
-      inputEl.value = "";
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      chatHistory.push({ role: "user", content: `[${subject}] ${question}` });
-
-      const loadingMsg = document.createElement("p");
-      loadingMsg.className = "loading-indicator";
-      loadingMsg.textContent = "Tawfiq AI is thinking...";
-      messagesDiv.appendChild(loadingMsg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      try {
-        const response = await fetch('/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ history: chatHistory })
-        });
-        const data = await response.json();
-        messagesDiv.removeChild(loadingMsg);
-        const answerText = data.answer || "Sorry, couldn't answer.";
-        chatHistory.push({ role: "assistant", content: answerText });
-
-        const aiMsg = document.createElement("p");
-        aiMsg.innerHTML = "Tawfiq AI: " + answerText.replace(/\n/g, '<br>');
-        messagesDiv.appendChild(aiMsg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      } catch (error) {
-        console.error('Error:', error);
-        messagesDiv.removeChild(loadingMsg);
-        const errorMsg = document.createElement("p");
-        errorMsg.textContent = "Tawfiq AI: Error getting response.";
-        messagesDiv.appendChild(errorMsg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-    }
-  </script>
 </body>
 </html>
