@@ -8,7 +8,7 @@ import openai
 app = FastAPI()
 
 # Load API key from environment variable
-OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")  # or OPENAI_API_KEY
+OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")  # or set OPENAI_API_KEY
 if not OPENAI_API_KEY:
     raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
 
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve the frontend
+# Serve the frontend HTML
 @app.get("/", response_class=HTMLResponse)
 def home():
     html_content = """
@@ -35,7 +35,7 @@ def home():
 <title>Telavista - Your Personal Learning Companion</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Styles -->
+<!-- Styles omitted for brevity, include your CSS as before -->
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -90,7 +90,6 @@ def home():
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-  /* Chat styles */
   #messages {
     max-height: 300px;
     overflow-y: auto;
@@ -116,7 +115,6 @@ def home():
     font-style: italic;
     color: #555;
   }
-  /* Additional styles for dropdowns and inputs */
   input[type=text], select {
     width: 60%;
     padding: 8px;
@@ -144,7 +142,6 @@ def home():
 <h3>✨ Empower your learning journey ✨</h3>
 </header>
 
-<!-- Tabs -->
 <div class="tab">
   <button class="tablinks" onclick="showSection('AI')">🤖 AI</button>
   <button class="tablinks" onclick="showSection('PA')">🧑‍💼 P.A</button>
@@ -152,7 +149,6 @@ def home():
   <button class="tablinks" onclick="showSection('Goals')">🎯 Goals Road Map</button>
 </div>
 
-<!-- Sections -->
 <div class="section" id="AI">
   <h3>Ask a Question</h3>
   <input type="text" id="aiUserInput" placeholder="Ask a question about anything..." />
@@ -194,7 +190,6 @@ def home():
   <div id="goalsMessages"></div>
 </div>
 
-<!-- JavaScript for tab switching and asking -->
 <script>
   function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.style.display='none');
@@ -223,7 +218,6 @@ def home():
     if (!question) return;
 
     const messagesDiv = document.getElementById(messageId);
-    // Show user's message
     const userMsg = document.createElement("div");
     userMsg.className = "user-message";
     userMsg.textContent = "You: " + question;
@@ -231,7 +225,6 @@ def home():
     document.getElementById(inputId).value = "";
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-    // For GPA section, include selected course if any
     let payloadQuestion = question;
     if (section === 'GPA') {
       const course = document.getElementById('coursesDropdown').value;
@@ -240,7 +233,6 @@ def home():
       }
     }
 
-    // Show loader
     const loadingMsg = document.createElement("div");
     loadingMsg.className = "loading-indicator";
     loadingMsg.textContent = "Telavista is thinking...";
@@ -254,10 +246,8 @@ def home():
         body: JSON.stringify({ question: payloadQuestion, section: section })
       });
       const data = await res.json();
-      // Remove loader
       messagesDiv.removeChild(loadingMsg);
       const answer = data.answer || "Sorry, couldn't answer.";
-      // Show response
       const aiMsg = document.createElement("div");
       aiMsg.className = "ai-message";
       aiMsg.innerHTML = "Telavista: " + answer;
@@ -278,7 +268,6 @@ def home():
     """
     return HTMLResponse(content=html_content)
 
-# API route to handle questions
 @app.post("/ask")
 async def ask(request: Request):
     data = await request.json()
@@ -286,13 +275,12 @@ async def ask(request: Request):
     section = data.get("section", "")
 
     try:
-        # Prepare the prompt based on section
-        prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
+        # Use your specific model name here
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="chatgpt-4o-latest",  # <-- Replace with your exact model id
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": f"Section: {section}\nQuestion: {question}\nAnswer:"}
             ],
             max_tokens=150,
             temperature=0.7
