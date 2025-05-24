@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Load DeepAI API key from environment
+# Load API key from environment variable
 OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
@@ -283,18 +283,21 @@ async def ask(request: Request):
 
     try:
         prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # You can change to "gpt-3.5-turbo" if you prefer
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=150,
             temperature=0.7,
             n=1,
             stop=["\n"]
         )
-        answer = response.choices[0].text.strip()
+        answer = response.choices[0].message['content'].strip()
     except Exception as e:
         # Log the exception for debugging
-        print(f"Error during DeepAI API call: {e}")
+        print(f"Error during API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
 
     return JSONResponse({"answer": answer})
