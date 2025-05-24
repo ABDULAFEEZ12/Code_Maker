@@ -204,7 +204,7 @@ def home():
     document.querySelectorAll('.section').forEach(s => s.style.display='none');
     document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
     document.getElementById(sectionId).style.display='block';
-    document.querySelector(`button[onclick="showSection('${sectionId}')"]`).classList.add('active');
+    document.querySelector(\`button[onclick="showSection('${sectionId}')"]\`).classList.add('active');
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -287,16 +287,20 @@ async def ask(request: Request):
         data = await request.json()
         question = data.get("question", "")
         section = data.get("section", "")
-        prompt = f"Section: {section}\nQuestion: {question}\nAnswer:"
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
+        prompt_text = f"Section: {section}\nQuestion: {question}\nAnswer:"
+
+        # Call the GPT-4 API
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Using GPT-4
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt_text}
+            ],
             max_tokens=150,
             temperature=0.7,
-            n=1,
-            stop=["\n"]
         )
-        answer = response.choices[0].text.strip()
+
+        answer = response.choices[0].message['content'].strip()
     except Exception as e:
         print(f"Error during API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
