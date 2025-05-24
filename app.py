@@ -3,8 +3,6 @@ import openai
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional
 
 app = FastAPI()
 
@@ -12,9 +10,10 @@ app = FastAPI()
 OPENAI_API_KEY = os.getenv("OPENROUTER_API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("Please set the OPENROUTER_API_KEY environment variable.")
+
 openai.api_key = OPENAI_API_KEY
 
-# Enable CORS for all origins (adjust for production)
+# Enable CORS for all origins (adjust as needed)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,11 +21,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Pydantic model for /ask request
-class AskRequest(BaseModel):
-    question: str
-    section: Optional[str] = ""
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -93,6 +87,7 @@ def home():
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
+  /* Chat styles */
   #messages {
     max-height: 300px;
     overflow-y: auto;
@@ -118,6 +113,7 @@ def home():
     font-style: italic;
     color: #555;
   }
+  /* Additional styles for dropdowns and inputs */
   input[type=text], select {
     width: 60%;
     padding: 8px;
@@ -153,7 +149,7 @@ def home():
   <button class="tablinks" onclick="showSection('Goals')">🎯 Goals Road Map</button>
 </div>
 
-<!-- AI Section -->
+<!-- Sections -->
 <div class="section" id="AI">
   <h3>Ask a Question</h3>
   <input type="text" id="aiUserInput" placeholder="Ask a question about anything..." />
@@ -161,7 +157,6 @@ def home():
   <div id="aiMessages"></div>
 </div>
 
-<!-- P.A Section -->
 <div class="section" id="PA">
   <h3>Personal Assistant</h3>
   <input type="text" id="paUserInput" placeholder="Ask your Personal Assistant..." />
@@ -169,7 +164,6 @@ def home():
   <div id="paMessages"></div>
 </div>
 
-<!-- GPA Section -->
 <div class="section" id="GPA">
   <h3>%>5.0 G.P.A</h3>
   <p>Ask about courses, studying tips, or anything related to GPA.</p>
@@ -189,7 +183,6 @@ def home():
   <div id="gpaMessages"></div>
 </div>
 
-<!-- Goals Road Map -->
 <div class="section" id="Goals">
   <h3>Goals Road Map</h3>
   <p>Ask about your goals, plans, or strategies to achieve them.</p>
@@ -235,7 +228,7 @@ def home():
     document.getElementById(inputId).value = "";
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-    // Append course info if GPA section
+    // For GPA section, include selected course if any
     let payloadQuestion = question;
     if (section === 'GPA') {
       const course = document.getElementById('coursesDropdown').value;
@@ -261,6 +254,7 @@ def home():
       // Remove loader
       messagesDiv.removeChild(loadingMsg);
       const answer = data.answer || "Sorry, couldn't answer.";
+      // Show response
       const aiMsg = document.createElement("div");
       aiMsg.className = "ai-message";
       aiMsg.innerHTML = "Telavista: " + answer;
@@ -283,25 +277,24 @@ def home():
 
 @app.post("/ask")
 async def ask(request: Request):
-    try:
-        data = await request.json()
-        question = data.get("question", "")
-        section = data.get("section", "")
-        prompt_text = f"Section: {section}\nQuestion: {question}\nAnswer:"
+    data = await request.json()
+    question = data.get("question", "")
+    section = data.get("section", "")
 
-        # Call the GPT-4 API
+    try:
+        # Compose prompt with system message and user question
         response = openai.ChatCompletion.create(
             model="gpt-4",  # Using GPT-4
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt_text}
+                {"role": "user", "content": f"Section: {section}\nQuestion: {question}\nAnswer:"}
             ],
             max_tokens=150,
             temperature=0.7,
         )
-
         answer = response.choices[0].message['content'].strip()
     except Exception as e:
-        print(f"Error during API call: {e}")
+        print(f"Error during GPT-4 API call: {e}")
         answer = "Sorry, I couldn't generate a response at the moment."
+
     return JSONResponse({"answer": answer})
