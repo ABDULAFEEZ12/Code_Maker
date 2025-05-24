@@ -1,139 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>TELAVISTA
-The Future of Learning AI, Coding & Digital Skills – All in One Smart Platform</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- Link to external CSS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+  <meta charset="UTF-8" />
+  <title>TELAVISTA – The Future of Learning AI, Coding & Digital Skills</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body class="light-mode">
+  <button class="toggle-btn" onclick="toggleMode()">Toggle Mode</button>
 
-<button class="toggle-btn" onclick="toggleMode()">Toggle Mode</button>
+  <header>
+    <h1>🌙 TELAVISTA – The Future of Learning AI, Coding & Digital Skills 🌙</h1>
+    <h3>✨ Ask me anything, My Boss ✨</h3>
+  </header>
 
-<header>
-<h1>🌙 TELAVISTA
-The Future of Learning AI, Coding & Digital Skills – All in One Smart Platform 🌙</h1>
-<h3>✨ Ask me anything My Boss ✨</h3>
-</header>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('aiSection', event)">🤖 AI</div>
+    <div class="tab" onclick="switchTab('codePlaygroundSection', event)">💻 Code Playground</div>
+    <div class="tab" onclick="switchTab('studyRoomSection', event)">📚 Study Room</div>
+    <div class="tab" onclick="switchTab('communitySection', event)">🌐 Global Community</div>
+  </div>
 
-<div class="tabs">
-<div class="tab active" onclick="switchTab('aiSection', event)">🤖 AI</div>
-<div class="tab" onclick="switchTab('codePlaygroundSection', event)">💻 Code Playground</div>
-<div class="tab" onclick="switchTab('studyRoomSection', event)">📚 Study Room</div>
-<div class="tab" onclick="switchTab('communitySection', event)">🌐 Global Community</div>
-</div>
+  <!-- AI Section -->
+  <div class="section active" id="aiSection">
+    <select id="subjectSelector">
+      <option value="Islam">Islam</option>
+      <option value="Math">Math</option>
+      <option value="Coding">Coding</option>
+      <option value="General">General</option>
+    </select>
+    <input type="text" id="userInput" placeholder="Ask a question..." />
+    <button id="askButton" onclick="sendQuestion()">Ask</button>
+    <div class="messages" id="messages"></div>
+  </div>
 
-<!-- AI Section -->
-<div class="section active" id="aiSection">
-<input type="text" id="userInput" placeholder="Ask a question about Islam..."/>
-<button id="askButton" onclick="sendQuestion()">Ask</button>
-<div class="messages" id="messages"></div>
-</div>
+  <!-- Code Playground Section -->
+  <div class="section" id="codePlaygroundSection">
+    <h2>Code Playground</h2>
+    <p>Coming soon: an interactive coding environment.</p>
+  </div>
 
-<!-- Code Playground Section -->
-<div class="section" id="codePlaygroundSection">
-<h2>Code Playground</h2>
-<!-- You can add your code editor or tools here -->
-<p>Coming soon: an interactive coding environment.</p>
-</div>
+  <!-- Study Room Section -->
+  <div class="section" id="studyRoomSection">
+    <h2>Study Room</h2>
+    <label for="mathCourses">Mathematics 100-Level (Second Semester):</label>
+    <select id="mathCourses">
+      <option value="MTH112">MTH112 – Calculus II</option>
+      <option value="MTH114">MTH114 – Linear Algebra</option>
+      <option value="STA112">STA112 – Probability & Statistics</option>
+      <option value="CSC112">CSC112 – Introduction to Programming</option>
+      <option value="PHY102">PHY102 – Physics for Scientists II</option>
+    </select>
+  </div>
 
-<!-- Study Room Section -->
-<div class="section" id="studyRoomSection">
-<h2>Study Room</h2>
-<!-- Your study resources or interactive tools -->
-<p>Study resources and tools will be available here.</p>
-</div>
+  <!-- Global Community Section -->
+  <div class="section" id="communitySection">
+    <h2>Global Community</h2>
+    <p>Connect with the global community here.</p>
+  </div>
 
-<!-- Global Community Section -->
-<div class="section" id="communitySection">
-<h2>Global Community</h2>
-<!-- Community features, forums, or chats -->
-<p>Connect with the global community here.</p>
-</div>
+  <script>
+    let chatHistory = [];
 
-<script>
-  // Initialize conversation history array
-  let chatHistory = [];
-
-  function switchTab(sectionId, event) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    event.target.classList.add('active');
-    // Clear previous messages/results
-    document.getElementById('messages').innerHTML = '';
-  }
-
-  function toggleMode() {
-    document.body.classList.toggle('light-mode');
-    document.body.classList.toggle('dark-mode');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    if (document.body.classList.contains('dark-mode')) {
-      toggleBtn.textContent = 'Toggle Light Mode';
-    } else {
-      toggleBtn.textContent = 'Toggle Dark Mode';
+    function switchTab(sectionId, event) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      event.target.classList.add('active');
+      document.getElementById('messages').innerHTML = '';
     }
-  }
 
-  async function sendQuestion() {
-    const inputEl = document.getElementById("userInput");
-    const question = inputEl.value.trim();
-    if (!question) return;
-
-    // Show user's message
-    const messagesDiv = document.getElementById("messages");
-    const userMsg = document.createElement("p");
-    userMsg.className = "user-message";
-    userMsg.textContent = "You: " + question;
-    messagesDiv.appendChild(userMsg);
-    inputEl.value = "";
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    // Add user message to chat history
-    chatHistory.push({ role: "user", content: question });
-
-    // Show loading indicator
-    const loadingMsg = document.createElement("p");
-    loadingMsg.className = "loading-indicator";
-    loadingMsg.textContent = "Tawfiq AI is thinking...";
-    messagesDiv.appendChild(loadingMsg);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    try {
-      const response = await fetch('/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ history: chatHistory })
-      });
-      const data = await response.json();
-      // Remove loading
-      messagesDiv.removeChild(loadingMsg);
-      const answerText = data.answer || "Sorry, couldn't answer.";
-      // Append AI reply to chat history
-      chatHistory.push({ role: "assistant", content: answerText });
-      // Display AI reply
-      const aiMsg = document.createElement("p");
-      aiMsg.innerHTML = "Tawfiq AI: " + answerText.replace(/\n/g, '<br>');
-      messagesDiv.appendChild(aiMsg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    } catch (error) {
-      console.error('Error:', error);
-      messagesDiv.removeChild(loadingMsg);
-      const errorMsg = document.createElement("p");
-      errorMsg.textContent = "Tawfiq AI: Error getting response.";
-      messagesDiv.appendChild(errorMsg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    function toggleMode() {
+      document.body.classList.toggle('light-mode');
+      document.body.classList.toggle('dark-mode');
+      const toggleBtn = document.querySelector('.toggle-btn');
+      toggleBtn.textContent = document.body.classList.contains('dark-mode') ? 'Toggle Light Mode' : 'Toggle Dark Mode';
     }
-  }
 
-  // Additional functions for Quran, Hadith, etc., can be added here if needed
-</script>
+    async function sendQuestion() {
+      const inputEl = document.getElementById("userInput");
+      const subject = document.getElementById("subjectSelector").value;
+      const question = inputEl.value.trim();
+      if (!question) return;
 
-<!-- Your existing script functions like loadSurahList, loadHadithTopics, loadDailyDuaFromJSON, etc., can be included below -->
+      const messagesDiv = document.getElementById("messages");
+      const userMsg = document.createElement("p");
+      userMsg.className = "user-message";
+      userMsg.textContent = `You (${subject}): ${question}`;
+      messagesDiv.appendChild(userMsg);
+      inputEl.value = "";
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
+      chatHistory.push({ role: "user", content: `[${subject}] ${question}` });
+
+      const loadingMsg = document.createElement("p");
+      loadingMsg.className = "loading-indicator";
+      loadingMsg.textContent = "Tawfiq AI is thinking...";
+      messagesDiv.appendChild(loadingMsg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      try {
+        const response = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ history: chatHistory })
+        });
+        const data = await response.json();
+        messagesDiv.removeChild(loadingMsg);
+        const answerText = data.answer || "Sorry, couldn't answer.";
+        chatHistory.push({ role: "assistant", content: answerText });
+
+        const aiMsg = document.createElement("p");
+        aiMsg.innerHTML = "Tawfiq AI: " + answerText.replace(/\n/g, '<br>');
+        messagesDiv.appendChild(aiMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      } catch (error) {
+        console.error('Error:', error);
+        messagesDiv.removeChild(loadingMsg);
+        const errorMsg = document.createElement("p");
+        errorMsg.textContent = "Tawfiq AI: Error getting response.";
+        messagesDiv.appendChild(errorMsg);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    }
+  </script>
 </body>
 </html>
